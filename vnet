@@ -4,5 +4,15 @@ Vnet is a physical boundary in Azure, which means 2 vm's in different Vnet can't
 A very crucial practical knowledge around IP overlapping:
   Lab Details - HUBRG,AVDRG,DBRG,DCRG all under 1 subscription.
   1 dedicated VNET in HUBRG,1 dedicated in AVDRG and to verify possibility I tried same IP address space(HUBRG) with different subnet
-                for DCRG but as expected, Azure threw a warning
-                  
+  for DCRG but as expected, Azure threw a warning that similar address space is being used and it will not let you peer the vnet
+  Reason being simple, currently you may have subnets which are not overlapping but what if you create subnet in future which have overlapping IP's
+  To save Admins from that error, peering will not be available.
+
+Learning 2 - 
+ While creating vm's in different Resource groups, I didn't paid attention to the Vnet getting used.By default, Azure suggests you with 
+default new VNET and if we don't select the VNET created for RG, then we will have 2 different VNETS with similar IP address space and subnets.
+Now, if we peer the original VNET in RG, and try to ping, our request will fail.
+REASON - the peering needs to be done between vnets which is attached to the VM's NIC.
+Now to rectify my mistake, i had to delete vms and recreate it with selecting previously created VNET for the RG.
+But just to workaround what i did is peered the VNET's attached to the VM that got created while creating VM.
+
