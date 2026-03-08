@@ -16,3 +16,12 @@ REASON - the peering needs to be done between vnets which is attached to the VM'
 Now to rectify my mistake, i had to delete vms and recreate it with selecting previously created VNET for the RG.
 But just to workaround what i did is peered the VNET's attached to the VM that got created while creating VM.
 
+
+Learning 3 - 
+fought 2 hours trobleshooting why my ping is working when i denied the icmp packets on nsg.
+I used every powershell cmdelt to see what is getting applying under the hood and all but nothing seem well, untill gemini told me on my 
+response that ICMPv6 is different from icmp v4.I denied v6 and when we use ping it is V4 which was why my rule was not getting implemented.
+commands i used were-
+To find the NIC name and RG name - Get-agnetworkinterface.
+To see effective security rules with deny ones- Get-AzEffectiveNetworkSecurityGroup -NetworkInterfaceName linux-vm-hub782 -ResourceGroupName hubrg |Select-Object -ExpandProperty EffectiveSecurityRules | Where-Object { $_.Access -eq "Deny" } | Format-Table Name, Priority, Access, Protocol
+
