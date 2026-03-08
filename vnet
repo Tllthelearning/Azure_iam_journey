@@ -1,0 +1,8 @@
+Lots of new stuff learnt today around vnets and subnets in Azure.
+Vnet is a resource in azure which needs a resource group under a subscription to be created.
+Vnet is a physical boundary in Azure, which means 2 vm's in different Vnet can't talk untill we do VNET peering.
+A very crucial practical knowledge around IP overlapping:
+  Lab Details - HUBRG,AVDRG,DBRG,DCRG all under 1 subscription.
+  1 dedicated VNET in HUBRG,1 dedicated in AVDRG and to verify possibility I tried same IP address space(HUBRG) with different subnet
+                for DCRG but as expected, Azure threw a warning
+                  
