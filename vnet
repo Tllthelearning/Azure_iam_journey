@@ -25,3 +25,5 @@ commands i used were-
 To find the NIC name and RG name - Get-agnetworkinterface.
 To see effective security rules with deny ones- Get-AzEffectiveNetworkSecurityGroup -NetworkInterfaceName linux-vm-hub782 -ResourceGroupName hubrg |Select-Object -ExpandProperty EffectiveSecurityRules | Where-Object { $_.Access -eq "Deny" } | Format-Table Name, Priority, Access, Protocol
 
+Learning 4 -
+If your vnet is not in same region your vm is getting created, you cant select it during creation.
