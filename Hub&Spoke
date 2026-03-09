@@ -14,3 +14,24 @@ when our spokes can communicate with hub on required ports or services but not d
 To enable talk between HUB & SPOKE - we just need to enable peering.
 We must not enable peering between spokes as that will defy our purpose of segmentation.
 Also, the sole purpose of keeping hub in picture was to ensure that all traffic goes via HUB only.
+
+LEARNING 2 - 
+
+To enable talk beween spokes via hub, we need to do these 3 steps RELIGIOUSLY:
+1- enable packet(IP forwarding) on NIC of HUB VM
+      By default, an Azure NIC is only allowed to send or receive traffic where the Source or Destination IP matches the specific IP address assigned to that NIC in the Azure Portal.
+      Normal VM: If VM-A (10.0.0.5) sends a packet, Azure checks the packet. If the source says 10.0.0.5, it lets it pass.
+      Hub VM (Routing): When your Spoke VM sends a packet through the Hub, the packet still has the Spoke's IP address (e.g., 10.1.0.4) as the source.
+      The Block: When that packet hits the Hub VM's NIC to be forwarded, Azure's "Physical" network sees a packet with a source of 10.1.0.4 coming from a NIC that is supposed to be 10.0.0.4. Azure assumes this is "IP Spoofing" (someone pretending to be someone else) and drops the packet instantly
+2 - enable packet forwarding on OS level
+    Linux - sysctl net.ipv4.ip_forward to 1
+    windows - # Set the registry key to enable IP Routing (0 = disabled, 1 = enabled)
+      Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "IPEnableRouter" -Value 1
+
+3 - Create as many route table as you have spokes because we need to attach them to spokes.
+    Need to give destination subnet like Spoke B and Next HOP as HUB VM IP & attach it to spoke A's subnet.
+   Create another route table destination as Spoke A and next Hop as HUB VM IP and attach it to spoke B's subnet.
+Now whenever Vm from spoke A tries to reach vm in spoke B, it will look into route table attached to it and looks for next hop
+goes to HUB VM and then looks into destination vm in subnet Spoke B which is allowed in route and thus will reach there.
+
+Our HUB VM will act as NVA here , a basic one.
