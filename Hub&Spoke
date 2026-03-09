@@ -1,0 +1,16 @@
+What a cool and outstanding feature in AZURE networking.
+We can keep our resources in hub and spoke model, exactly what you are imagining in your head.
+In enterprise architecture, it is on the basis of Multiple subscriptions where 1 become hub and others become spoke.
+The main idea behind hub is to hold the shared and crucial infa within it. Like firewall/Expressgateway/DC
+while this is not feasible for me in my lab, i went by 1 subscription and multiple resource groups within it.
+keeping 1 RD as Hub and all others as Spoke.
+keep in mind as always do not try to keep VNETS from same address space, otherwise Azure will not let you peer them
+Reason is simple what if in future you create a subnet from those VNETS which are overlapping, how will azure decide destination.
+So, keep completely different VNETS for all RG like (10.1.0.0/16,10.2.0.0/16,10.3.0.0/16,10.4.0.0/16) Keeping your vnets like this gives 
+enough room for scaling by configuring multiple subnets within 1 VNET.
+LEARNING 1 - 
+What exactly defines HUB & SPOKE - 
+when our spokes can communicate with hub on required ports or services but not directly between spokes.
+To enable talk between HUB & SPOKE - we just need to enable peering.
+We must not enable peering between spokes as that will defy our purpose of segmentation.
+Also, the sole purpose of keeping hub in picture was to ensure that all traffic goes via HUB only.
